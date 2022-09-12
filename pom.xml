@@ -8,5 +8,6 @@
 
   <scm>
     <developerConnection>scm:git:git@github.com:https://github.com/alexsuter/release-with-maven-on-github.git</developerConnection>
+    <tag>branch-1</tag>
   </scm>
 </project>
