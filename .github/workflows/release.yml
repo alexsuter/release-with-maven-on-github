@@ -10,10 +10,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Get branch name
+      id: branch-name
+      uses: tj-actions/branch-names@v6
+
     - name: Configure Git
       run: |
-        git config user.email "actions@github.com"
-        git config user.name "GitHub Actions"
+        git config user.email "${{ github.actor }}@users.noreply.github.com"
+        git config user.name "${{ github.actor }}"
         git checkout -b new-release
 
     - name: Make changes to pull request
@@ -21,15 +25,15 @@ jobs:
 
     - name: Configure Git
       run: |
-        git add .
-        git commit -m "test"
+        git add . 
+        git commit -m "changes"
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4
-      with:      
-        commit-message: Prepare next development iteration
-        branch: new-release
-        delete-branch: true
-        title: Prepare next development iteration
-        body: Prepare next development iteration            
-        assignees: ${{ github.actor }}
+    - name: Create pull request
+      uses: repo-sync/pull-request@v2
+      with:
+        destination_branch: ${{ steps.branch-name.outputs.current_branch }}
+        source_branch: new-release
+        pr_title: "Release"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        pr_assignee: ${{ github.actor }}
+
